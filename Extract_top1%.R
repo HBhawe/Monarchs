@@ -7,6 +7,12 @@ eastvresident = test2[1:236, ]
 test3 = table[order(-table$migrant_vs_resident_Fst), ]
 migrantvresident = test3[1:236, ]
 
+florida_west = table[order(-table$West_vs_Florida_FST), ]
+florida_east = table[order(-table$East_vs_Florida_FST), ]
+
+
 write.csv(westvresident, "West_vs_Resident.csv")
 write.csv(eastvresident, "East_vs_Resident.csv")
 write.csv(migrantvresident, "migrant_vs_Resident.csv")
+write.csv(florida_west, "westvflorida.csv")
+write.csv(florida_east, "eastvflorida.csv")
