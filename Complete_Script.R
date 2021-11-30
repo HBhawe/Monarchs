@@ -70,8 +70,8 @@ newtop5 = top5_chr16[order(top5_chr16$BIN_START), ]
 plot(newtop5$BIN_START, newtop5$migrant_vs_resident_Fst)
 lines(newtop5$BIN_START, newtop5$migrant_vs_resident_Fst)
 
-ggplot(newtop5, mapping=aes(BIN_START,migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position") + xlim(0,1000000)
-plot1 = ggplot(newtop5, mapping=aes(BIN_START,migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position") + xlim(0,1000000)
+#ggplot(newtop5, mapping=aes(BIN_START,migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position") + xlim(0,1000000)
+#plot1 = ggplot(newtop5, mapping=aes(BIN_START,migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position") + xlim(0,1000000)
 
 #Gene plot
 data = read.table("danaus_plexippus_v3_core_32_85_1.gff")
@@ -81,20 +81,96 @@ data2 = subset(data,data$V1==t)
 genes = subset(data2,data2$V3=="gene")
 genes = genes[order(genes$V4),]
 
+#write.csv(genes,"Genes.csv")
+
 table_sort = subset(table,table$CHROM==t)
 #plot(genes$V4, factor(genes$V9))
 genes$V9 = sub(";.*", "", genes$V9)  
 
-dotplot(genes$V9~genes$V4)
+Set_genes=read.csv("Genes.csv")
+Set_genes = Set_genes[order(Set_genes$V1), ]
+write.csv(Set_genes,"Genes.csv")
 
-ggplot(genes, mapping=aes(V4,V9)) +geom_line() + geom_point() + labs(y="Gene ID",x="Gene Start Position") + xlim(0,1000000)
-plot2 = ggplot(genes, mapping=aes(V4,V9)) +geom_line() + geom_point() + labs(y="Gene ID",x="Gene Start Position") + xlim(0,1000000)
+genes = read.csv("Genes.csv")
+genes = genes[order(genes$chrom_pos), ]
+
+#plot(genes$chrom_pos,genes$V9)
+
+dotplot(genes$V9~genes$chrom_pos)
+
+#ggplot(genes, mapping=aes(V4,V9)) +geom_line() + geom_point() + labs(y="Gene ID",x="Gene Start Position")
+#plot2 = ggplot(genes, mapping=aes(V4,V9)) +geom_line() + geom_point() + labs(y="Gene ID",x="Gene Start Position")
 # + geom_line(aes(x=V4,y=V9)) + geom_line(aes(x=V5,y=V9))
 
 
-plotGenes(genes, chrom=16)
+#unique(sorted_table2$CHROM)
 
-cowplot::plot_grid(plot1, plot2, align = "v", ncol = 1, rel_heights = c(0.25, 0.75))
-egg::ggarrange(plot1, plot2, heights = c(0.25, 0.75))
+#table2["chrom_pos"] <- "0"
 
-unique(sorted_table2$CHROM)
+#write.csv(table2, "Chr_16_table.csv")
+
+#if(table2$CHROM=="DPSCF300047") {table2$chrom_pos == table2$BIN_START + 6619107}
+
+
+chr_16=read.csv("Chr_16_table.csv")
+
+
+chr_16 = chr_16[order(chr_16$chrom_pos), ]
+
+plot(chr_16$chrom_pos ,chr_16$migrant_vs_resident_Fst)
+lines(chr_16$chrom_pos ,chr_16$migrant_vs_resident_Fst)
+
+mean1=mean(chr_16[["migrant_vs_resident_Fst"]])
+mean(chr_16$migrant_vs_resident_Fst, na.rm = TRUE)  
+
+ggplot(data=chr_16, aes(x=chrom_pos,y=migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position on chromosome 16") + xlim(0,9000000) + theme_gray(base_size = 9)#+ geom_hline(yintercept = mean1,linetype="dashed", color = "blue")
+plot1 = ggplot(data=chr_16, aes(x=chrom_pos,y=migrant_vs_resident_Fst)) + geom_line() + labs(y="Migrant vs Resident Fst",x="Position on chromosome 16") + xlim(0,9000000) + theme_gray(base_size = 9)#+ geom_hline(yintercept = mean1,linetype="dashed", color = "blue")
+
+ggplot(data = genes, aes(x=chrom_pos, y= V9)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 9)
+plot2 = ggplot(data = genes, aes(x=chrom_pos, y= V9)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 9)
+
+cowplot::plot_grid(plot1, plot2, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
+egg::ggarrange(plot1, plot2, heights = c(0.2, 0.8))
+
+
+#v4=read.table("v4_annotation.txt")
+
+#V4 ANNOTATION COMPARISON
+
+v4=read.delim("v4_annotation.txt")
+
+v4_chr16 = subset(v4,v4$Scaffold=="NC_045822.1")
+v4_chr16_genes = subset(v4_chr16,v4_chr16$Function=="gene")
+chr_16 = chr_16[order(chr_16$chrom_pos), ]
+
+v4_chr16_genes$Gene_ID.s = sub(";.*", "", v4_chr16_genes$Gene_ID.s)
+#ggplot(data = v4_chr16_genes, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
+#plot3 = ggplot(data = v4_chr16_genes, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
+
+#cowplot::plot_grid(plot1, plot3, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
+#gg::ggarrange(plot1, plot3, heights = c(0.2, 0.8))
+
+filtered_v4 = subset(v4_chr16_genes,v4_chr16_genes$Start_pos>=7250000)
+ggplot(data = filtered_v4, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
+plot4 = ggplot(data = filtered_v4, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
+
+cowplot::plot_grid(plot1, plot4, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
+egg::ggarrange(plot1, plot4, heights = c(0.2, 0.8))
+
+
+#TEST FOR MEAN AND MEDIAN PLOTS
+#unique(table$CHROM)
+#mean_table=c("scaffold","mean")
+#x = unique(table$CHROM)
+
+#scaffolds = table$CHROM
+#fst = table$migrant_vs_resident_Fst
+
+#total = data.frame(scaffolds,fst)
+#mean=total[ ,list(mean=mean(fst)), by=scaffolds]
+#mean=aggregate(total$fst, list(total$scaffolds), FUN=mean)
+#median=aggregate(total$fst, list(total$scaffolds), FUN=median)
+#plot(mean$Group.1,mean$x)
+#ggplot(data = mean, aes(x=Group.1, y=x)) + geom_point() + labs(y="Mean Fst",x="Scaffold_name") + theme_gray(base_size = 5)
+#ggplot(data = median, aes(x=Group.1, y=x)) + geom_point() + labs(y="Median Fst",x="Scaffold_name") + theme_gray(base_size = 5)
+
