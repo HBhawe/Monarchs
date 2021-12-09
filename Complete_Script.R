@@ -157,6 +157,7 @@ plot4 = ggplot(data = filtered_v4, aes(x=Start_pos, y= Gene_ID.s)) + geom_line()
 cowplot::plot_grid(plot1, plot4, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
 egg::ggarrange(plot1, plot4, heights = c(0.2, 0.8))
 
+write.csv(filtered_v4, "Gene_List.csv")
 
 #TEST FOR MEAN AND MEDIAN PLOTS
 #unique(table$CHROM)
@@ -173,4 +174,13 @@ egg::ggarrange(plot1, plot4, heights = c(0.2, 0.8))
 #plot(mean$Group.1,mean$x)
 #ggplot(data = mean, aes(x=Group.1, y=x)) + geom_point() + labs(y="Mean Fst",x="Scaffold_name") + theme_gray(base_size = 5)
 #ggplot(data = median, aes(x=Group.1, y=x)) + geom_point() + labs(y="Median Fst",x="Scaffold_name") + theme_gray(base_size = 5)
+plot1
 
+length=read.delim("scaffolds_v3_lengths.txt")
+plot(length$Scaffold,length$Length)
+length2 = subset(length,length$Length>=100000)
+plot99=ggplot(data = length, aes(x=Scaffold, y=Length)) + geom_point() + labs(y="Length",x="Scaffold") + geom_point(data = length2, aes(x='DPSCF300114', y=516792), color='red',size=5)#+ geom_line()
+plot99
+
+plot100 = ggplot(data = length2, aes(x=Scaffold, y=Length)) + geom_point() + geom_point(data = length2, aes(x='DPSCF300114', y=516792), color='red',size=5) + labs(y="Length",x="Scaffold") #+ geom_line()
+plot100
