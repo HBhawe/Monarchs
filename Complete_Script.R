@@ -30,6 +30,8 @@ eastvresident = test2[1:236, ]
 test3 = table[order(-table$migrant_vs_resident_Fst), ]
 migrantvresident = test3[1:236, ]
 
+A=intersect(westvresident,eastvresident,migrantvresident)
+
 top2 = test3[1:472, ]
 top2_migrantvresident = write.csv(top2, "top2migrantvresident.csv")
 
@@ -76,6 +78,7 @@ lines(newtop5$BIN_START, newtop5$migrant_vs_resident_Fst)
 #Gene plot
 data = read.table("danaus_plexippus_v3_core_32_85_1.gff")
 t=c('DPSCF300098','DPSCF300147','DPSCF300267','DPSCF300067','DPSCF300240','DPSCF300322','DPSCF300095','DPSCF300353','DPSCF300170','DPSCF300127','DPSCF300331','DPSCF300114','DPSCF300105','DPSCF300047','DPSCF300236')
+t
 
 data2 = subset(data,data$V1==t)
 genes = subset(data2,data2$V3=="gene")
@@ -145,12 +148,12 @@ chr_16 = chr_16[order(chr_16$chrom_pos), ]
 
 v4_chr16_genes$Gene_ID.s = sub(";.*", "", v4_chr16_genes$Gene_ID.s)
 #ggplot(data = v4_chr16_genes, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
-#plot3 = ggplot(data = v4_chr16_genes, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
+plot3 = ggplot(data = v4_chr16_genes, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
 
-#cowplot::plot_grid(plot1, plot3, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
-#gg::ggarrange(plot1, plot3, heights = c(0.2, 0.8))
+cowplot::plot_grid(plot1, plot3, align = "v", ncol = 1, rel_heights = c(0.2, 0.8))
+egg::ggarrange(plot1, plot3, heights = c(0.2, 0.8))
 
-filtered_v4 = subset(v4_chr16_genes,v4_chr16_genes$Start_pos>=7250000)
+filtered_v4 = subset(v4_chr16_genes,v4_chr16_genes$Start_pos>=7100000)
 ggplot(data = filtered_v4, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
 plot4 = ggplot(data = filtered_v4, aes(x=Start_pos, y= Gene_ID.s)) + geom_line() + geom_point() + labs(y="Gene ID",x="Gene Position on Chr 16") + xlim(0,9000000) + theme_gray(base_size = 6)
 
